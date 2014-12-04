@@ -6,7 +6,10 @@ class Personnage{
 	private $_experience;
 	private $_degats;
 
-	public function parler{
+	public function parler() 
+	{
 		echo "Je suis un personnage !";		
 	}
 }
+
+?>
