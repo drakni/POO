@@ -3,9 +3,10 @@
 //Lancement du controler de chargement auto des classes
 require("/controler/classLoader.php");
 
-$perso1 = new Personnage(99,0);
-$perso2 = new Personnage(23,0);
+$perso1 = new Personnage(Personnage::FORCE_GRANDE,0);
+$perso2 = new Personnage(Personnage::FORCE_PETITE,0);
 
+Personnage::provoquer();
 $perso1->frapper($perso2);
 $perso1->setExperience(10);
 

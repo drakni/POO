@@ -6,9 +6,15 @@ class Personnage{
 	private $_experience;
 	private $_degats;
 
+	const FORCE_PETITE = 20;
+  	const FORCE_MOYENNE = 50;
+  	const FORCE_GRANDE = 80;
+
+  	private static $_texteProvoc = "Tu vas prendre cher, pleutre !";
+
 	//constructeur
-	public function __construct($force,$degats){
-		$this->setForce($force);
+	public function __construct($forceInitiale,$degats){
+		$this->setForce($forceInitiale);
 		$this->setDegats($degats);
 		$this->setExperience(1);
 	}
@@ -29,6 +35,10 @@ class Personnage{
 
 	//Setters
 	public function setForce($force){
+		if (!in_array($force, array(self::FORCE_PETITE, self::FORCE_MOYENNE, self::FORCE_GRANDE))) {
+			trigger_error("La force doit &ecirc;tre &eacute;gale &agrave; ".self::FORCE_PETITE.", ".self::FORCE_MOYENNE." ou ".self::FORCE_GRANDE);
+		}
+
 		if(!is_int($force)){
 			trigger_error("La force d'un personnage est obligatoirement un nombre entier.", E_USER_WARING);
 			return;
@@ -78,6 +88,10 @@ class Personnage{
 	public function frapper(Personnage $persoCible){
 		$persoCible->_degats += $this->_force;
 		echo "Vous frappez de ". $this->_force ." points de d&eacute;gats. Votre adversaire accumule d&eacute;sormais ". $persoCible->_degats ." points de d&eacute;gats !";		
+	}
+
+	public static function provoquer(){
+		echo self::$_texteProvoc;
 	}
 }
 
