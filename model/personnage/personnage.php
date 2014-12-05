@@ -1,10 +1,17 @@
 <?php
 
 class Personnage{
-	private $_force = 20;
+	private $_force;
 	private $_localisation;
-	private $_experience = 0;
-	private $_degats = 0;
+	private $_experience;
+	private $_degats;
+
+	//constructeur
+	public function __construct($force,$degats){
+		$this->setForce($force);
+		$this->setDegats($degats);
+		$this->setExperience(1);
+	}
 
 	//Getters
 	public function force(){
@@ -26,10 +33,32 @@ class Personnage{
 			trigger_error("La force d'un personnage est obligatoirement un nombre entier.", E_USER_WARING);
 			return;
 		}
-
+		if ($force>=100) {
+			trigger_error("La force d'un personnage est obligatoirement inf&eacute;rieur &agrave; 100.", E_USER_WARING);
+			return;
+		}
 		$this->_force = $force;
 	}
 
+	public function setDegats($degats){
+		if(!is_int($degats)){
+			trigger_error("Les degats d'un personnage est obligatoirement un nombre entier.", E_USER_WARING);
+			return;
+		}
+		if ($degats>=100) {
+			trigger_error("Les degats d'un personnage est obligatoirement inf&eacute;rieur &agrave; 100.", E_USER_WARING);
+			return;
+		}
+		$this->_degats = $degats;
+	}
+
+	public function setExperience($experience){
+		if(!is_int($experience)){
+			trigger_error("L'exp&eacute;rience doit &ecirc;tre un nombre entier", E_USER_WARING);
+			return;
+		}
+		$this->_experience = $experience;
+	}
 
 
 	//Autres méthodes
@@ -44,7 +73,6 @@ class Personnage{
 
 	public function gagnerExperience(){
 		$this->_experience += 1;
-		echo "Votre personnage a gagn&eacute; ". $this->_experience ."point(s) d'exp&eacute;rience !";
 	}
 
 	public function frapper(Personnage $persoCible){
