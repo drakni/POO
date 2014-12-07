@@ -1,99 +1,103 @@
 <?php
-
-class Personnage{
-	  private $_id;
-  	private $_nom;
-  	private $_forcePerso;
-  	private $_degats;
-  	private $_niveau;
-  	private $_experience;
-
-
-	//constructeur
-	public function __construct(array $donnees){
-    self::hydrate($donnees);
-	}
-
-	//hydrate
-	public function hydrate(array $donnees)
-	{
-	  foreach ($donnees as $key => $value)
-	  {
-	    $method = 'set'.ucfirst($key);
-	    if (method_exists($this, $method)) {
-	    	$this->$method($value);
-	    }
-	  }
-	}
-
-	// Liste des getters
+class Personnage
+{
+  private $_degats,
+          $_id,
+          $_nom;
   
-  public function id() { return $this->_id; }
-  public function nom() { return $this->_nom; }
-  public function forcePerso() { return $this->_forcePerso; }
-  public function degats() { return $this->_degats; }
-  public function niveau() { return $this->_niveau; }
-  public function experience() { return $this->_experience; }
-
-  public function setId($id)
+  const CEST_MOI = 1; // Constante renvoyée par la méthode `frapper` si on se frappe soi-même.
+  const PERSONNAGE_TUE = 2; // Constante renvoyée par la méthode `frapper` si on a tué le personnage en le frappant.
+  const PERSONNAGE_FRAPPE = 3; // Constante renvoyée par la méthode `frapper` si on a bien frappé le personnage.
+  
+  
+  public function __construct(array $donnees)
   {
-    // L'identifiant du personnage sera, quoi qu'il arrive, un nombre entier.
-    $this->_id = (int) $id;
+    $this->hydrate($donnees);
   }
-        
-  public function setNom($nom)
+  
+  public function frapper(Personnage $perso)
   {
-    // On vérifie qu'il s'agit bien d'une chaîne de caractères.
-    // Dont la longueur est inférieure à 30 caractères.
-    if (is_string($nom) && strlen($nom) <= 30)
+    if ($perso->id() == $this->_id)
     {
-      $this->_nom = $nom;
+      return self::CEST_MOI;
+    }
+    
+    // On indique au personnage qu'il doit recevoir des dégâts.
+    // Puis on retourne la valeur renvoyée par la méthode : self::PERSONNAGE_TUE ou self::PERSONNAGE_FRAPPE
+    return $perso->recevoirDegats();
+  }
+  
+  public function hydrate(array $donnees)
+  {
+    foreach ($donnees as $key => $value)
+    {
+      $method = 'set'.ucfirst($key);
+      
+      if (method_exists($this, $method))
+      {
+        $this->$method($value);
+      }
     }
   }
-
-  public function setForcePerso($forcePerso)
+  
+  public function recevoirDegats()
   {
-    $forcePerso = (int) $forcePerso;
-            
-    // On vérifie que la force passée est comprise entre 0 et 100.
-    if ($forcePerso >= 0 && $forcePerso <= 100)
+    $this->_degats += 5;
+    
+    // Si on a 100 de dégâts ou plus, on dit que le personnage a été tué.
+    if ($this->_degats >= 100)
     {
-      $this->_forcePerso = $forcePerso;
+      return self::PERSONNAGE_TUE;
     }
+    
+    // Sinon, on se contente de dire que le personnage a bien été frappé.
+    return self::PERSONNAGE_FRAPPE;
   }
+  
+  
+  // GETTERS //
+  
 
+  public function degats()
+  {
+    return $this->_degats;
+  }
+  
+  public function id()
+  {
+    return $this->_id;
+  }
+  
+  public function nom()
+  {
+    return $this->_nom;
+  }
+  
   public function setDegats($degats)
   {
     $degats = (int) $degats;
-
-    // On vérifie que les dégâts passés sont compris entre 0 et 100.
+    
     if ($degats >= 0 && $degats <= 100)
     {
       $this->_degats = $degats;
     }
   }
-
-  public function setNiveau($niveau)
+  
+  public function setId($id)
   {
-    $niveau = (int) $niveau;
-
-    // On vérifie que le niveau n'est pas négatif.
-    if ($niveau >= 0)
+    $id = (int) $id;
+    
+    if ($id > 0)
     {
-      $this->_niveau = $niveau;
+      $this->_id = $id;
     }
   }
-
-  public function setExperience($exp)
+  
+  public function setNom($nom)
   {
-    $exp = (int) $exp;
-
-    // On vérifie que l'expérience est comprise entre 0 et 100.
-    if ($exp >= 0 && $exp <= 100)
+    if (is_string($nom))
     {
-      $this->_experience = $exp;
+      $this->_nom = $nom;
     }
   }
 }
-
-?>
