@@ -53,6 +53,11 @@ class Personnage
     // Sinon, on se contente de dire que le personnage a bien été frappé.
     return self::PERSONNAGE_FRAPPE;
   }
+
+  public function nomValide()
+  {
+    return !empty($this->_nom);
+  }
   
   
   // GETTERS //
